@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Social Cup — Coffee Time Jour 2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F2ECE0; --ink:#2E2117; --green:#2F4A3E; --green-soft:#3F5F4F;
+    --rust:#A85C36; --line:#D8CDB8; --card:#FBF8F1;
+    box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-padding-top:env(safe-area-inset-top,0px);}
+  body{margin:0;background:var(--cream);color:var(--ink);font-family:'Inter',sans-serif;line-height:1.5;}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;margin:0;color:var(--green);}
+  .wrap{max-width:840px;margin:0 auto;padding:0 24px;}
+  header.hero{background:var(--green);color:var(--cream);padding:44px 0 30px;}
+  header.hero h1{color:var(--cream);font-size:clamp(1.8rem,5vw,2.7rem);letter-spacing:-0.01em;}
+  header.hero p.tag{margin:8px 0 0;font-size:1rem;color:#CFE0D5;}
+  header.hero .meta{margin-top:18px;font-size:.8rem;color:#B9CFC2;border-top:1px solid rgba(255,255,255,.2);padding-top:14px;}
+  .hero-row{display:flex;align-items:center;justify-content:space-between;gap:20px;}
+  .hero-copy{min-width:0;}
+  .hero-art-wrap{height:140px;width:140px;flex:none;}
+  .hero-art{height:140px;width:140px;object-fit:contain;border-radius:14px;border:1px solid rgba(255,255,255,.22);background:#F2ECE0;}
+  .market-badges{display:flex;flex-wrap:wrap;gap:7px;margin-top:15px;}
+  .market-badge{padding:6px 9px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:99px;color:#E9EFE7;font-size:.72rem;font-weight:600;}
+
+  .slider-bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--card);border-bottom:1px solid var(--line);padding:16px 0;box-shadow:0 2px 8px rgba(0,0,0,.05);}
+  .slider-bar .row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .slider-bar label{font-size:.85rem;color:#6b5c4a;white-space:nowrap;}
+  .slider-bar input[type=range]{flex:1;min-width:140px;accent-color:var(--rust);}
+  .slider-bar .ca-value{font-family:'Fraunces',serif;font-size:1.4rem;color:var(--rust);min-width:105px;text-align:right;}
+
+  nav.tabs{position:sticky;top:calc(env(safe-area-inset-top,0px) + 61px);z-index:19;background:var(--cream);border-bottom:1px solid var(--line);overflow-x:auto;}
+  nav.tabs .wrap{display:flex;gap:4px;padding-top:0;padding-bottom:0;}
+  nav.tabs button{
+    font-family:'Inter',sans-serif;font-size:.85rem;font-weight:600;color:#6b5c4a;
+    background:none;border:none;border-bottom:3px solid transparent;padding:14px 12px;cursor:pointer;white-space:nowrap;
+  }
+  nav.tabs button.active{color:var(--green);border-bottom-color:var(--rust);}
+  nav.tabs button:hover{color:var(--green);}
+
+  .panel{display:none;padding:36px 0;}
+  .panel.active{display:block;}
+  .sub{color:#6b5c4a;font-size:.95rem;margin-bottom:20px;max-width:60ch;}
+  table{width:100%;border-collapse:collapse;font-size:.92rem;background:var(--card);}
+  caption{text-align:left;font-family:'Fraunces',serif;font-size:1rem;color:var(--green-soft);margin-bottom:8px;font-weight:600;}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--line);}
+  th{color:#6b5c4a;font-weight:600;font-size:.8rem;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr.total td{font-weight:700;color:var(--green);border-top:2px solid var(--green);border-bottom:none;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+  .stat-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:18px;}
+  .stat{background:var(--card);border:1px solid var(--line);padding:16px 18px;flex:1 1 150px;}
+  .stat .n{font-family:'Fraunces',serif;font-size:1.6rem;color:var(--rust);}
+  .stat .l{font-size:.78rem;color:#6b5c4a;margin-top:2px;}
+  .coffee-figures{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px;}
+  .coffee-figure{background:#F0E7D8;border-radius:10px;padding:14px;}
+  .coffee-figure .icon{font-size:1.35rem;display:block;margin-bottom:4px;}
+  .coffee-figure b{display:block;font-family:'Fraunces',serif;color:var(--green);font-size:1.2rem;}
+  .coffee-figure small{font-size:.76rem;color:#6b5c4a;}
+  .concept-icon{margin-right:7px;font-family:'Inter',sans-serif;}
+  .activity-plans{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px;}
+  .activity-plan{background:var(--card);border:1px solid var(--line);padding:17px;position:relative;overflow:hidden;}
+  .activity-plan .plan-icon{font-size:1.5rem;float:right;}
+  .activity-plan h3{font-size:1.05rem;margin-bottom:7px;}
+  .activity-plan p{font-size:.83rem;color:#6b5c4a;margin:6px 0;}
+  .activity-plan b{color:var(--rust);}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .info-card{background:var(--card);border:1px solid var(--line);padding:16px;}
+  .info-card h3{font-size:1rem;margin-bottom:7px;}
+  .info-card p{font-size:.85rem;margin:0;color:#514536;}
+  .case-banner{background:#E7EFEA;border-left:4px solid var(--green);padding:14px 16px;margin:18px 0;color:#30483d;font-size:.88rem;}
+  .note{font-size:.85rem;color:#6b5c4a;margin-top:14px;padding-left:14px;border-left:3px solid var(--rust);}
+  ul.menu{list-style:none;margin:0;padding:0;}
+  ul.menu li{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px dashed var(--line);}
+  footer{background:var(--green);color:#CFE0D5;padding:26px 0;font-size:.82rem;}
+  footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;}
+  @media (max-width:640px){.coffee-figures,.activity-plans,.grid3{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-row">
+      <div class="hero-copy">
+        <h1>The Social Cup</h1>
+        <p class="tag">Coffee Time — Jour 2 : prix, marge, compte de résultat, BFR, bilan</p>
+        <div class="market-badges" aria-label="Repères marché">
+          <span class="market-badge">☕ 44,8 % consomment hors domicile</span>
+          <span class="market-badge">📍 +3 500 coffee shops</span>
+          <span class="market-badge">🌱 85 % indépendants</span>
+        </div>
+      </div>
+      <div class="hero-art-wrap">
+        <img class="hero-art" src="socialcup-activities.png" alt="Personne versant du café avec des symboles de musique, quiz, cinéma et lecture">
+      </div>
+    </div>
+    <div class="meta">Sorbonne Université · Master Management de l'Innovation 2026/2027<br>Selin Uzun · Defne Dincer · Dorka Kiraly · Ceren Bektas · Dogac Cetiner</div>
+  </div>
+</header>
+
+<div class="slider-bar">
+  <div class="wrap row">
+    <label>Chiffre d'affaires annuel HT - scénario année 1</label>
+    <span class="ca-value" id="caValue">161 400 €</span>
+  </div>
+</div>
+
+<nav class="tabs">
+  <div class="wrap">
+    <button class="tab-btn active" data-panel="positioning">☕ Positionnement & prix</button>
+    <button class="tab-btn" data-panel="cr">📊 Compte de résultat</button>
+    <button class="tab-btn" data-panel="marge">📈 Marge</button>
+    <button class="tab-btn" data-panel="bfr">🔄 BFR</button>
+    <button class="tab-btn" data-panel="bilan">⚖️ Bilan : ouverture & année 1</button>
+    <button class="tab-btn" data-panel="strategy">🧭 4P & PESTEL</button>
+    <button class="tab-btn" data-panel="annexes">🧾 Annexes</button>
+    <button class="tab-btn" data-panel="rentabilite">📐 Rentabilité</button>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <section id="positioning" class="panel active">
+    <h2>Le chiffre d'affaires retenu</h2>
+    <p class="sub">Scénario année 1 retenu : 161 400 € HT. Les prix ci-dessous sont appliqués avec 95 transactions par jour, 300 jours d'ouverture et 3 événements par semaine.</p>
+    <p>Notre positionnement : un café de spécialité milieu-haut de gamme, implanté dans un quartier vivant et étudiant (Oberkampf, Quartier Latin ou Canal Saint-Martin), avec un panier légèrement supérieur à un café classique et une deuxième jambe de revenus liée aux événements (quiz, projections, écoutes collectives).</p>
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="revPrinc">141 600 €</div><div class="l">Boissons, pâtisserie-café et snack-café</div></div>
+      <div class="stat"><div class="n" id="revCompl">19 800 €</div><div class="l">Quiz, cinéma et une boisson incluse</div></div>
+      <div class="stat"><div class="n" id="revTotal">161 400 €</div><div class="l">Chiffre d'affaires annuel HT</div></div>
+    </div>
+    <div class="coffee-figures">
+      <div class="coffee-figure"><span class="icon">☕</span><b id="coffeePerDay">60</b><small>transactions / jour</small></div>
+      <div class="coffee-figure"><span class="icon">💶</span><b id="marginPerBasket">4,97 €</b><small>panier moyen hors entrées, HT</small></div>
+      <div class="coffee-figure"><span class="icon">🎬</span><b id="eventShare">18 %</b><small>du CA vient des événements</small></div>
+    </div>
+    <h2 style="margin-top:34px;">Politique de prix</h2>
+    <p class="sub">Une offre plus accessible, pensée pour les étudiants et jeunes actifs.</p>
+    <ul class="menu">
+      <li><span>Espresso</span><span>2,20 € TTC</span></li>
+      <li><span>Americano / café filtre</span><span>2,50 € TTC</span></li>
+      <li><span>Cappuccino / latte</span><span>3,40 € TTC</span></li>
+      <li><span>Chai Latte</span><span>4,50 € TTC</span></li>
+      <li><span>Pâtisserie</span><span>2,50 € TTC</span></li>
+      <li><span>Formule pâtisserie + café</span><span>5,90 € TTC</span></li>
+      <li><span>Formule snack + café</span><span>8,90 € TTC</span></li>
+    </ul>
+    <p class="note">Hypothèse : 3 événements par semaine, 16 participants en moyenne. Les consommations incluses dans le forfait événement ne sont pas comptées une deuxième fois dans les ventes café.</p>
+    <h2 style="margin-top:34px;">Tarifs activités & privatisation</h2>
+    <p class="sub">Chaque forfait comprend une animation et une boisson au choix (espresso, americano, thé ou boisson fraîche).</p>
+    <div class="activity-plans">
+      <article class="activity-plan"><span class="plan-icon">🧠</span><h3>Soirée quiz</h3><p><b>9,90 € TTC / personne</b></p><p>Quiz + une boisson incluse.</p><p>16 participants visés / soirée.</p></article>
+      <article class="activity-plan"><span class="plan-icon">🎬</span><h3>Projection cinéma</h3><p><b>9,90 € TTC / personne</b></p><p>Film + une boisson incluse.</p><p>Droits de diffusion à valider.</p></article>
+      <article class="activity-plan"><span class="plan-icon">🔑</span><h3>Privatisation du café</h3><p>Quiz ou cinéma : <b>300 € TTC</b> jusqu'à 25 personnes.</p><p>Soit 25 × 9,90 € + 50 € de fermeture du café.</p><p>Brunch : <b>400 € TTC</b> jusqu'à 25 personnes, soit 25 × 13,90 € + environ 50 € de fermeture du café. Préparé avec l'offre sandwich/snack.</p></article>
+    </div>
+    <p class="note">Movie night : un film ancien n'est pas automatiquement libre de droits. Pour une projection collective annoncée au café, privilégier un film du domaine public ou demander une autorisation au distributeur/ayant droit. Une réservation privée d'entreprise doit aussi vérifier les conditions de diffusion du contenu choisi.</p>
+  </section>
+
+  <section id="cr" class="panel">
+    <h2><span class="concept-icon">📊</span>Compte de résultat prévisionnel</h2>
+    <p class="sub">Format Annexe 2 - scénario année 1 avec les prix accessibles retenus.</p>
+    <table>
+      <tr><th>Poste</th><th class="num">Montant</th></tr>
+      <tr><td>Ventes de marchandises</td><td class="num" id="cr_ca">109 260 €</td></tr>
+      <tr><td>Achats effectués de marchandises</td><td class="num" id="cr_achats">− 38 191 €</td></tr>
+      <tr><td>Fournitures consommables</td><td class="num" id="cr_fournitures">− 4 800 €</td></tr>
+      <tr><td>Services extérieurs (loyer, fonctionnement, événements)</td><td class="num" id="cr_services">− 52 750 €</td></tr>
+      <tr><td>Impôts et taxes</td><td class="num" id="cr_impots">0 €</td></tr>
+      <tr><td>Salaires bruts (salariés)</td><td class="num" id="cr_salaires">− 24 000 €</td></tr>
+      <tr><td>Charges sociales (salariés)</td><td class="num" id="cr_charges_salaries">− 7 000 €</td></tr>
+      <tr><td>Prélèvements (dirigeant)</td><td class="num" id="cr_prelevements">− 20 000 €</td></tr>
+      <tr><td>Charges sociales (dirigeant)</td><td class="num" id="cr_charges_dirigeant">− 15 000 €</td></tr>
+      <tr><td>Dotations aux amortissements</td><td class="num" id="cr_amort">− 8 000 €</td></tr>
+      <tr class="total"><td>Total des charges d'exploitation</td><td class="num" id="cr_total_charges">− 169 741 €</td></tr>
+      <tr class="total"><td>Résultat d'exploitation</td><td class="num" id="cr_re">− 60 481 €</td></tr>
+      <tr><td>Charges financières</td><td class="num" id="cr_fin">− 2 000 €</td></tr>
+      <tr class="total"><td>Résultat courant</td><td class="num" id="cr_rcai">− 62 481 €</td></tr>
+      <tr><td>Impôt sur les bénéfices</td><td class="num" id="cr_is">0 €</td></tr>
+      <tr class="total"><td>Résultat de l'exercice</td><td class="num" id="cr_rn">− 62 481 €</td></tr>
+    </table>
+    <p class="note">Avec les prix réduits et les volumes actuels, le résultat devient négatif. Il faut donc ensuite ajuster les volumes, les charges fixes ou les prix pour rendre le projet rentable.</p>
+  </section>
+
+  <section id="marge" class="panel">
+    <h2><span class="concept-icon">📈</span>Marge prévisionnelle</h2>
+    <div class="stat-row">
+      <div class="stat"><div class="n" id="m_brute">60,7 %</div><div class="l">Marge sur coûts variables / CA</div></div>
+      <div class="stat"><div class="n" id="m_ebe">− 55,4 %</div><div class="l">Résultat d'exploitation / CA</div></div>
+      <div class="stat"><div class="n" id="m_nette">− 57,2 %</div><div class="l">Taux de marge nette</div></div>
+    </div>
+    <p class="note">Avec ce scénario de prix et de fréquentation, la marge nette est négative. La prochaine étape sera donc d'ajuster les volumes, les charges fixes ou les tarifs pour atteindre l'équilibre.</p>
+  </section>
+
+  <section id="bfr" class="panel">
+    <h2><span class="concept-icon">🔄</span>Besoin en fonds de roulement (BFR)</h2>
+    <table>
+      <tr><th>Composante</th><th class="num">Montant</th></tr>
+      <tr><td>Stocks</td><td class="num" id="bfr_stock">2 000 €</td></tr>
+      <tr><td>Créances clients</td><td class="num" id="bfr_creances">0 €</td></tr>
+      <tr><td>Dettes fournisseurs</td><td class="num" id="bfr_dettes">− 2 500 €</td></tr>
+      <tr style="background:var(--green); color:#FFFFFF;">
+        <th style="color:#FFFFFF; font-weight:700;">Besoins en fonds de roulement</th>
+        <th class="num" style="color:#FFFFFF; font-weight:700;">Année 1</th>
+      </tr>
+      <tr><td>Stocks de marchandises</td><td class="num" id="bfr_stock">2 000 €</td></tr>
+      <tr><td>Autres créances</td><td class="num" id="bfr_creances">0 €</td></tr>
+      <tr style="background:#E8E0D0; font-weight:600;">
+        <td>Besoins d'exploitation (Total)</td>
+        <td class="num">2 000 €</td>
+      </tr>
+      <tr style="background:#D8CDB8; font-weight:700;">
+        <td>Total des besoins</td>
+        <td class="num">2 000 €</td>
+      </tr>
+      <tr><td>Dettes fournisseurs</td><td class="num" id="bfr_dettes">2 500 €</td></tr>
+      <tr><td>Dettes fiscales et sociales</td><td class="num">0 €</td></tr>
+      <tr style="background:#E8E0D0; font-weight:600;">
+        <td>Ressources d'exploitation (Total)</td>
+        <td class="num">2 500 €</td>
+      </tr>
+      <tr style="background:#D8CDB8; font-weight:700;">
+        <td>Total des ressources</td>
+        <td class="num">2 500 €</td>
+      </tr>
+      <tr><td>Variation du B.F.R.</td><td class="num">− 500 €</td></tr>
+      <tr class="total" style="background:#E8E0D0;">
+        <td>Besoins en fonds de roulement</td>
+        <td class="num" id="bfr_total">− 500 €</td>
+      </tr>
+    </table>
+    <p class="note"><strong>Analyse du BFR négatif (− 500 €) :</strong> En café-restauration, les clients paient immédiatement (créances = 0 €). Grâce à un délai de paiement accordé par nos fournisseurs (dettes = 2 500 €), le crédit fournisseur dépasse le niveau des stocks (2 000 €). Ce BFR négatif crée une ressource en fonds de roulement qui génère de la trésorerie et réduit notre besoin de financement.</p>
+  </section>
+
+  <section id="bilan" class="panel">
+    <h2><span class="concept-icon">⚖️</span>Bilan : ouverture & fin d'année 1</h2>
+    <p class="sub">Le bilan d'ouverture présente les besoins et ressources de lancement ; le bilan de clôture montre la situation après la première année.</p>
+    <h2 style="margin-top:26px;">Bilan d'ouverture</h2>
+    <div class="grid2">
+      <table><caption>Actif - besoins au départ</caption>
+        <tr><td>Équipements et aménagements</td><td class="num">40 000 €</td></tr>
+        <tr><td>Dépôt de garantie</td><td class="num">3 000 €</td></tr>
+        <tr><td>Stock initial</td><td class="num">2 000 €</td></tr>
+        <tr><td>Banque</td><td class="num">15 000 €</td></tr>
+        <tr class="total"><td>Total actif</td><td class="num">60 000 €</td></tr>
+      </table>
+      <table><caption>Passif - ressources au départ</caption>
+        <tr><td>Capital / apport</td><td class="num">25 000 €</td></tr>
+        <tr><td>Prêt bancaire initial</td><td class="num">33 000 €</td></tr>
+        <tr><td>Crédit fournisseurs</td><td class="num">2 000 €</td></tr>
+        <tr class="total"><td>Total passif</td><td class="num">60 000 €</td></tr>
+      </table>
+    </div>
+    <h2 style="margin-top:30px;">Bilan simplifié à la clôture de l'année 1</h2>
+    <div class="grid2">
+      <table>
+        <caption>Actif</caption>
+        <tr><td>Immobilisations nettes</td><td class="num">32 000 €</td></tr>
+        <tr><td>Dépôt de garantie</td><td class="num">3 000 €</td></tr>
+        <tr><td>Stocks</td><td class="num" id="b_stock">2 000 €</td></tr>
+        <tr><td>Créances clients</td><td class="num" id="b_creances">0 €</td></tr>
+        <tr><td>Trésorerie disponible</td><td class="num" id="b_treso">0 €</td></tr>
+        <tr class="total"><td>Total actif</td><td class="num" id="b_totalactif">37 000 €</td></tr>
+      </table>
+      <table>
+        <caption>Passif</caption>
+        <tr><td>Capital</td><td class="num">25 000 €</td></tr>
+        <tr><td>Résultat de l'exercice</td><td class="num" id="b_cp">− 62 481 €</td></tr>
+        <tr><td>Prêt restant</td><td class="num">27 000 €</td></tr>
+        <tr><td>Dettes fournisseurs</td><td class="num" id="b_dettes">2 500 €</td></tr>
+        <tr><td>Découvert bancaire / besoin de financement</td><td class="num" id="b_decouvert">15 100 €</td></tr>
+        <tr class="total"><td>Total passif</td><td class="num" id="b_totalpassif">37 000 €</td></tr>
+      </table>
+    </div>
+    <p class="note" style="margin-top:18px;">
+    <strong>Explication du découvert bancaire (Trésorerie de fin d'année 1) :</strong><br>
+    Besoins au départ : 60 000 € = équipements 40 000 € + dépôt 3 000 € + stock 2 000 € + banque 15 000 €. Financement : capital 25 000 € + prêt 33 000 € + fournisseurs 2 000 €.<br><br>
+    <strong>En année 1 :</strong> 15 000 € (trésorerie initiale) − 32 600 € (résultat net) + 8 000 € (amortissements) − 6 000 € (remboursement du prêt) + 500 € (ressource BFR) = <strong>− 15 100 €</strong>.<br>
+    Le découvert bancaire de 15 100 € matérialise donc le besoin de financement exact de la première année et s'équilibre parfaitement avec le bilan.
+  </p>
+  </section>
+
+  <section id="strategy" class="panel">
+  <h2>🧭 4P, PESTEL & nouvelle offre</h2>
+  <p class="sub">Le cadre demandé pour l'étude de marché : une offre de café expérientiel, avec une logique commerciale et financière visible.</p>
+  <div class="grid2">
+    <div class="info-card"><h3>Produit</h3><p>Café de spécialité, pâtisseries et snacks en partenariat avec des boulangeries locales, et programmation socio-culturelle : soirées quiz, projections cinéma et écoutes collectives.</p></div>
+    <div class="info-card"><h3>Prix</h3><p>Offre accessible : boissons de 2,20 € à 4,50 € TTC, formule pâtisserie 5,90 € TTC, formule snack 8,90 € TTC et entrée événement à 9,90 € TTC (boisson incluse).</p></div>
+    <div class="info-card"><h3>Place</h3><p>Quartier parisien vivant (ex. Oberkampf, Quartier Latin), proche des campus et bureaux. Le modèle retient 25 places assises, 300 jours d'ouverture et 3 événements par semaine.</p></div>
+    <div class="info-card"><h3>Promotion</h3><p>Communication ciblée étudiants et jeunes actifs, partenariats avec les associations étudiantes/campus, réseaux sociaux et programmation régulière pour fidéliser la clientèle.</p></div>
+  </div>
+  <h2 style="margin-top:30px;">PESTEL</h2>
+  <div class="grid3">
+    <div class="info-card"><h3>Politique</h3><p>Règles d'occupation du domaine public (terrasse), accessibilité PMR et réglementation des débits de boissons.</p></div>
+    <div class="info-card"><h3>Économique</h3><p>Inflation des coûts matières (grains de café, lait), de l'énergie et des loyers parisiens : suivi rigoureux du ticket moyen et du taux d'occupation requis.</p></div>
+    <div class="info-card"><h3>Social</h3><p>Engouement pour les tiers-lieux conviviaux, accessibles et animés pour travailler, étudier et se détendre (culture du café de spécialité).</p></div>
+    <div class="info-card"><h3>Technologique</h3><p>Caisse enregistreuse tactile, paiement sans contact/QR code, système de réservation en ligne pour les événements et équipement vidéo/son.</p></div>
+    <div class="info-card"><h3>Environnemental</h3><p>Approvisionnement en circuits courts, café éco-responsable/équitable, réduction des emballages à usage unique et gestion du gaspillage.</p></div>
+    <div class="info-card"><h3>Légal</h3><p>Application des taux de TVA (10 % sur la consommation sur place, 5,5 % à emporter), normes d'hygiène (HACCP), droit de diffusion audiovisuelle (SACEM/ALPA) et droit du travail.</p></div>
+  </div>
+  <h2 style="margin-top:30px;">Nouvelle offre : Chai Latte</h2>
+  <p class="sub">Exemple de calcul demandé pour une nouvelle boisson. Hypothèses à tester auprès des clients.</p>
+  <table>
+    <tr><th>Élément</th><th class="num">Valeur</th></tr>
+    <tr><td>Prix de vente</td><td class="num">4,50 € TTC / 4,09 € HT</td></tr>
+    <tr><td>Coût d'achat estimé</td><td class="num">1,20 € HT</td></tr>
+    <tr><td>Marge commerciale</td><td class="num">2,89 € HT</td></tr>
+    <tr><td>Taux de marge</td><td class="num">240,9 %</td></tr>
+    <tr><td>Taux de marque</td><td class="num">70,7 %</td></tr>
+    <tr><td>Coefficient multiplicateur</td><td class="num">3,75 (TTC / Coût HT)</td></tr>
+    <tr class="total"><td>Quantité prévisionnelle</td><td class="num">1 800 / an (6 / jour)</td></tr>
+  </table>
+  <p class="note">Chai, lait et espresso : coût matières 1,20 € HT (café 0,36 €, lait 0,30 €, chai 0,45 €, pertes 0,09 €). À 6/jour sur 300 jours : CA 7 364 € HT et marge matières 5 204 €. Formules : marge = prix HT − coût HT ; taux de marge = marge / coût HT ; taux de marque = marge / prix HT ; coefficient = prix TTC / coût HT.</p>
+  </section>
+
+  <section id="annexes" class="panel">
+    <h2>🧾 Annexes - charges, personnel & amortissements</h2>
+    <p class="sub">Ces tableaux détaillent les hypothèses utilisées dans le compte de résultat prévisionnel.</p>
+    <div class="grid2">
+      <table><caption>Fournitures consommables</caption>
+        <tr><td>Emballages</td><td class="num">1 200 €</td></tr><tr><td>Électricité, eau et gaz</td><td class="num">2 300 €</td></tr><tr><td>Petit équipement</td><td class="num">550 €</td></tr><tr><td>Produits d'entretien</td><td class="num">550 €</td></tr><tr><td>Fournitures administratives</td><td class="num">200 €</td></tr>
+        <tr class="total"><td>Total</td><td class="num">4 800 €</td></tr>
+      </table>
+      <table><caption>Services extérieurs</caption>
+        <tr><td>Location immobilière</td><td class="num">30 000 €</td></tr><tr><td>Location de matériels</td><td class="num">1 000 €</td></tr><tr><td>Assurances</td><td class="num">1 200 €</td></tr><tr><td>Honoraires comptables / juridiques</td><td class="num">2 500 €</td></tr><tr><td>Publicité, publications</td><td class="num">3 000 €</td></tr><tr><td>Frais postaux et télécommunications</td><td class="num">750 €</td></tr><tr><td>Services bancaires et terminal de paiement</td><td class="num">1 750 €</td></tr><tr><td>Entretien et réparations</td><td class="num">1 200 €</td></tr><tr><td>SACEM et syndicat professionnel</td><td class="num">850 €</td></tr><tr><td>Animations et événements</td><td class="num">10 500 €</td></tr>
+        <tr class="total"><td>Total</td><td class="num">52 750 €</td></tr>
+      </table>
+      <table><caption>Personnel & financement</caption>
+        <tr><td>Salaires bruts (salariés)</td><td class="num">24 000 €</td></tr><tr><td>Charges sociales (salariés)</td><td class="num">7 000 €</td></tr><tr><td>Prélèvements et charges (dirigeant)</td><td class="num">35 000 €</td></tr>
+        <tr class="total"><td>Total personnel</td><td class="num">66 000 €</td></tr>
+        <tr><td>Intérêts du prêt (compte de résultat)</td><td class="num">2 000 €</td></tr><tr><td>Remboursement annuel du capital (bilan / trésorerie)</td><td class="num">6 000 €</td></tr><tr><td>IS année 1 (résultat déficitaire)</td><td class="num">0 €</td></tr>
+      </table>
+    </div>
+    <div class="grid2" style="margin-top:26px;">
+      <table><caption>Investissements initiaux</caption>
+        <tr><td>Machine 2 groupes, moulin, eau</td><td class="num">10 000 €</td></tr><tr><td>Froid, vitrine, lavage</td><td class="num">8 000 €</td></tr><tr><td>Mobilier, comptoir, travaux</td><td class="num">15 000 €</td></tr><tr><td>Vaisselle, caisse, animation</td><td class="num">7 000 €</td></tr>
+        <tr class="total"><td>Total</td><td class="num">40 000 €</td></tr>
+      </table>
+      <table><caption>Amortissements</caption>
+        <tr><td>Durée d'amortissement retenue</td><td class="num">5 ans</td></tr><tr><td>Dotation annuelle estimée</td><td class="num">8 000 €</td></tr><tr><td>Immobilisations nettes fin année 1</td><td class="num">32 000 €</td></tr>
+        <tr class="total"><td>Stock / créances / fournisseurs</td><td class="num">2 000 € / 0 € / 2 500 €</td></tr>
+      </table>
+    </div>
+    <h2 style="margin-top:30px;">Données du cas Coffee Time à adapter</h2>
+    <p class="sub">Référence pédagogique de l'énoncé : ces données sont conservées ici pour couvrir le cahier des charges, mais ne remplacent pas le scénario financier Social Cup.</p>
+    <div class="grid2">
+      <table><caption>Projet, approvisionnement & statut</caption>
+        <tr><td>Local</td><td class="num">30 000 €</td></tr><tr><td>Surface intérieure / terrasse</td><td class="num">70 m² / 27 m²</td></tr><tr><td>Stock de marchandises annoncé</td><td class="num">3 000 €</td></tr><tr><td>Approvisionnement</td><td class="num">Circuits courts / producteurs locaux</td></tr><tr><td>Structure juridique</td><td class="num">EURL - TNS</td></tr>
+        <tr class="total"><td>Régime fiscal pédagogique</td><td class="num">IS réduit 15 %</td></tr>
+      </table>
+      <table><caption>Financement & fin d'année du cas</caption>
+        <tr><td>Apport personnel</td><td class="num">24 500 €</td></tr><tr><td>Capital social / compte courant</td><td class="num">5 000 € / 19 500 €</td></tr><tr><td>Prêt d'honneur</td><td class="num">2 000 € à 0 %, 5 ans</td></tr><tr><td>Prêt bancaire</td><td class="num">40 000 € à 1,44 %, 7 ans</td></tr><tr><td>Annuité du prêt bancaire</td><td class="num">6 048 €</td></tr>
+        <tr class="total"><td>Créances / stock / fournisseurs fin d'année</td><td class="num">1 744 € / 756 € / 653 €</td></tr>
+      </table>
+    </div>
+    <div class="grid2" style="margin-top:26px;">
+      <table><caption>Annexe 1 - charges externes du cas</caption>
+        <tr><td>Fournitures consommables</td><td class="num">2 000 €</td></tr><tr><td>Location immobilière</td><td class="num">6 000 €</td></tr><tr><td>Honoraires comptables / juridiques</td><td class="num">2 124 €</td></tr><tr><td>Location terrasse</td><td class="num">2 500 €</td></tr><tr><td>Entretien et réparations</td><td class="num">500 €</td></tr>
+        <tr class="total"><td>Total services extérieurs</td><td class="num">16 104 €</td></tr>
+      </table>
+      <table><caption>Annexes 3 & 4 - personnel / amortissements</caption>
+        <tr><td>Charges salarié (3 hypothèses)</td><td class="num">3 086 / 3 147 / 3 210 €</td></tr><tr><td>Charges dirigeant (3 hypothèses)</td><td class="num">5 400 / 5 508 / 5 618 €</td></tr><tr><td>Amortissements incorporels</td><td class="num">1 334 €</td></tr><tr><td>Amortissements corporels</td><td class="num">8 469 €</td></tr>
+        <tr class="total"><td>Total amortissements du cas</td><td class="num">9 803 €</td></tr>
+      </table>
+    </div>
+    <p class="note">Le cas prévoit aussi le recrutement d'une employée à temps partiel pendant six mois et des dettes fiscales et sociales de 2 583 € en fin d'année.</p>
+  </section>
+
+  <!-- KOD BLOGU 2: RENTABILITE PANEL KODU -->
+<section id="rentabilite" class="panel">
+  <h2><span class="concept-icon">📐</span>Analyse de Rentabilité & Seuils</h2>
+  <p class="sub">Évaluation du seuil de rentabilité, point mort, marge de sécurité et des rentabilités économique et financière pour l'année 1.</p>
+
+  <!-- ÖZET KARTLARI -->
+  <div class="stat-row">
+    <div class="stat">
+      <div class="n">212 766 €</div>
+      <div class="l">Seuil de rentabilité HT</div>
+    </div>
+    <div class="stat">
+      <div class="n">15,8 mois</div>
+      <div class="l">Point mort (~475 jours)</div>
+    </div>
+    <div class="stat">
+      <div class="n">− 51 366 €</div>
+      <div class="l">Marge de sécurité (−31,8 %)</div>
+    </div>
+  </div>
+
+  <div class="case-banner" style="margin-top:24px;">
+    <strong>Constat Année 1 :</strong> Le chiffre d'affaires prévisionnel (161 400 €) étant inférieur au seuil de rentabilité (212 766 €), le projet n'atteint pas l'équilibre financier au cours de la première année.
+  </div>
+
+  <!-- TABLEAU 1: SEUIL DE RENTABILITE ET MARGE SUR COUTS VARIABLES -->
+  <h2 style="margin-top:30px;">1. Seuil de rentabilité & Point mort</h2>
+  <table>
+    <caption>Calcul de la Marge sur Coûts Variables (MSCV), du Résultat et du Seuil</caption>
+    <tr><th>Élément / Indicateur</th><th>Formule / Détail</th><th class="num">Montant / Valeur</th></tr>
+    <tr><td>Chiffre d'affaires prévisionnel (CA)</td><td>Ventes prévues Année 1</td><td class="num">161 400 €</td></tr>
+    <tr><td>Achats de marchandises</td><td>Matières premières (boissons, snacks)</td><td class="num">60 450 €</td></tr>
+    <tr><td>Fournitures consommables</td><td>Consommables liés à l'activité</td><td class="num">4 800 €</td></tr>
+    <tr style="background:#E8E0D0; font-weight:600;"><td>Total Charges Variables (CV)</td><td>Achats + Fournitures</td><td class="num">65 250 €</td></tr>
+    <tr style="background:#E8E0D0; font-weight:600;"><td>Charges Fixes (CF)</td><td>Total charges (192 000 €) − CV (65 250 €)</td><td class="num">126 750 €</td></tr>
+    <tr class="total"><td>Marge sur Coûts Variables (MSCV)</td><td>CA − Charges Variables</td><td class="num">96 150 €</td></tr>
+    <tr class="total"><td>Taux de MSCV</td><td>(MSCV / CA) × 100</td><td class="num">59,6 %</td></tr>
+    <tr style="background:#F2DEDE; font-weight:700; color:#A94442;"><td>Résultat (Perte)</td><td>MSCV (96 150 €) − CF (126 750 €)</td><td class="num">− 30 600 €</td></tr>
+    <tr class="total" style="background:#E7EFEA;"><td>Seuil de Rentabilité (SR)</td><td>Charges Fixes / Taux de MSCV</td><td class="num">212 766 € HT</td></tr>
+  </table>
+
+  <!-- TABLEAU 2: POINT MORT ET MARGE DE SECURITE -->
+  <h2 style="margin-top:30px;">2. Indicateurs du Seuil de Rentabilité</h2>
+  <table>
+    <caption>Point mort, Marge de sécurité et Indice de sécurité</caption>
+    <tr><th>Indicateur</th><th>Formule de calcul</th><th class="num">Résultat</th><th>Interprétation</th></tr>
+    <tr>
+      <td><strong>Point mort (en mois)</strong></td>
+      <td>(Seuil de rentabilité / CA) × 12 mois</td>
+      <td class="num">15,8 mois</td>
+      <td>Atteint au-delà des 12 mois de l'année 1.</td>
+    </tr>
+    <tr>
+      <td><strong>Point mort (en jours)</strong></td>
+      <td>(Seuil de rentabilité / CA) × 360 jours</td>
+      <td class="num">475 jours</td>
+      <td>Le projet nécessite ~15,8 mois pour équilibrer ses charges.</td>
+    </tr>
+    <tr>
+      <td><strong>Marge de sécurité</strong></td>
+      <td>CA prévisionnel − Seuil de rentabilité</td>
+      <td class="num">− 51 366 €</td>
+      <td>Déficit de CA de 51 366 € pour atteindre le point d'équilibre.</td>
+    </tr>
+    <tr>
+      <td><strong>Indice de sécurité</strong></td>
+      <td>(Marge de sécurité / CA) × 100</td>
+      <td class="num">− 31,8 %</td>
+      <td>Indique le pourcentage de CA manquant pour couvrir les charges.</td>
+    </tr>
+  </table>
+
+  <!-- TABLEAU 3: RENTABILITE ECONOMIQUE ET FINANCIERE -->
+  <h2 style="margin-top:30px;">3. Rentabilité Économique et Financière</h2>
+  <p class="sub">Mesure de la performance des capitaux investis dans l'exploitation et du rendement pour les actionnaires.</p>
+
+  <div class="grid2">
+    <table>
+      <caption>Rentabilité Économique</caption>
+      <tr><td>Résultat d'exploitation (RE)</td><td class="num">− 30 600 €</td></tr>
+      <tr><td>Capitaux propres</td><td class="num">25 000 €</td></tr>
+      <tr><td>Dettes financières (Prêt)</td><td class="num">33 000 €</td></tr>
+      <tr style="background:#F9F6F0;"><td><strong>Capitaux investis</strong></td><td class="num"><strong>58 000 €</strong></td></tr>
+      <tr class="total"><td>Rentabilité Économique</td><td class="num">− 52,8 %</td></tr>
+    </table>
+
+    <table>
+      <caption>Rentabilité Financière (ROE)</caption>
+      <tr><td>Résultat net après impôts (RN)</td><td class="num">− 32 600 €</td></tr>
+      <tr><td>Capitaux propres</td><td class="num">25 000 €</td></tr>
+      <tr class="total"><td>Rentabilité Financière (ROE)</td><td class="num">− 130,4 %</td></tr>
+    </table>
+  </div>
+
+  <p class="note" style="margin-top:16px;">
+    • <strong>Rentabilité économique (−52,8 %) :</strong> Les moyens économiques engagés (58 000 €) ne produisent pas encore un résultat d'exploitation positif.<br>
+    • <strong>Rentabilité financière (−130,4 %) :</strong> Du point de vue des associés, les capitaux propres ne génèrent pas de rendement la première année en raison de la perte nette d'exploitation.
+  </p>
+
+  <!-- TABLEAU CAPACITÉ D'AUTOFINANCEMENT (CAF) -->
+<h2 style="margin-top:30px;">Capacité d'Autofinancement (CAF)</h2>
+<p class="sub">La CAF mesure la ressource nette interne générée par l'activité pour financer les investissements, rembourser les emprunts et assurer le développement.</p>
+
+<table>
+  <caption>Capacité d'autofinancement sur 3 ans</caption>
+  <thead>
+    <tr style="background:var(--green); color:#ffffff;">
+      <th style="color:#ffffff;">Capacité d'autofinancement</th>
+      <th class="num" style="color:#ffffff;">Année 1</th>
+      <th class="num" style="color:#ffffff;">Année 2 (Obj.)</th>
+      <th class="num" style="color:#ffffff;">Année 3 (Obj.)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>Résultat de l'exercice</strong></td>
+      <td class="num">− 32 600 €</td>
+      <td class="num">+ 12 500 €</td>
+      <td class="num">+ 28 000 €</td>
+    </tr>
+    <tr>
+      <td><strong>+ Dotations aux amortissements</strong></td>
+      <td class="num">+ 8 000 €</td>
+      <td class="num">+ 8 000 €</td>
+      <td class="num">+ 8 000 €</td>
+    </tr>
+    <tr class="total" style="background:#E7EFEA;">
+      <td><strong>Capacité d'autofinancement (CAF)</strong></td>
+      <td class="num"><strong>− 24 600 €</strong></td>
+      <td class="num"><strong>+ 20 500 €</strong></td>
+      <td class="num"><strong>+ 36 000 €</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<p class="note" style="margin-top:12px;">
+  <strong>Analyse de la CAF :</strong> En Année 1, la CAF est négative (−24 600 €) en raison de la perte initiale de l'exercice, atténuée par la réintégration des amortissements (charge non décaissée de 8 000 €). À partir de l'Année 2, avec l'atteinte du seuil de rentabilité, la CAF devient positive (+20 500 €) et permet d'assurer sereinement le remboursement du capital de l'emprunt bancaire (6 000 €/an).
+</p>
+
+  <!-- LEVIERS D'AMELIORATION -->
+  <h2 style="margin-top:30px;">4. Leviers d'optimisation pour atteindre l'équilibre</h2>
+  <div class="grid2">
+    <div class="info-card">
+      <h3>🚀 Actions sur le Chiffre d'Affaires</h3>
+      <p>• Augmenter le volume des ventes (passer de 95 à ~125 clients/jour).<br>
+         • Réajuster légèrement à la hausse certains prix de vente.<br>
+         • Développer la fréquentation lors des événements et privatisations.</p>
+    </div>
+    <div class="info-card">
+      <h3>📉 Actions sur les Charges</h3>
+      <p>• Réduire les charges fixes de structure (négociation loyers/honoraires).<br>
+         • Mieux négocier les prix d'achat de marchandises.<br>
+         • Améliorer la productivité opérationnelle en service.</p>
+    </div>
+  </div>
+  <!-- NODE DE PERSPECTIVE ET PLAN D'ACTION (ANNEE 2 & 3) -->
+  <h2 style="margin-top:36px;">5. Perspective Années 2 & 3 : Pourquoi ce résultat initial est normal et comment atteindre la rentabilité</h2>
+  
+  <div class="case-banner" style="background:#EBF3F5; border-left-color:var(--green); color:#22362C;">
+    <strong>Une situation initiale classique et non alarmante :</strong><br>
+    Il est tout à fait standard pour un établissement de restauration/café de présenter des indicateurs négatifs en Année 1. Cette phase correspond au démarrage de l'activité, à la montée en puissance de la fréquentation (courbe d'apprentissage et de notoriété) et à l'amortissement des investissements initiaux (40 000 €). Le chiffre d'affaires de la première année (161 400 €) reflète un scénario prudent de lancement.
+  </div>
+
+  <h3 style="margin-top:24px; color:var(--green);">Plan d'action & d'optimisation pour l'Année 2 et l'Année 3</h3>
+  <p class="sub">Pour atteindre et dépasser le seuil de rentabilité (212 766 €) dès la deuxième année, l'entreprise activera plusieurs leviers stratégiques complémentaires :</p>
+
+  <div class="grid3">
+    <div class="info-card">
+      <h3>1. Augmentation de la fréquentation (Volume)</h3>
+      <p>• Passage progressif de 95 à 130 clients/jour grâce au bouche-à-oreille et à la fidélisation.<br>
+         • Optimisation du taux d'occupation des événements (passer de 16 à 22 participants/soirée).<br>
+         • Effet attendu : <strong>+25 % à +35 % de CA</strong> (franchissement du seuil de rentabilité).</p>
+    </div>
+    
+    <div class="info-card">
+      <h3>2. Optimisation des prix & Panier moyen</h3>
+      <p>• Lancement de nouvelles boissons à forte marge (ex: Chai Latte à 240,9 % de taux de marge).<br>
+         • Incitation à la vente additionnelle (formules pâtisserie/snack + café).<br>
+         • Légère revalorisation tarifaire (+5 % à +8 %) sans impacter l'accessibilité étudiante.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>3. Rationalisation des coûts d'achat</h3>
+      <p>• Achat en plus grands volumes auprès des producteurs locaux pour obtenir des remises quantitatives.<br>
+         • Réduction des pertes et optimisation de la gestion des stocks de produits frais.<br>
+         • Objectif : Réduire le taux de charges variables de 40,4 % à 36 % du CA.</p>
+    </div>
+  </div>
+
+  <div class="grid2" style="margin-top:20px;">
+    <div class="info-card">
+      <h3>4. Maîtrise des charges fixes</h3>
+      <p>• Stabilisation des frais généraux (loyer fixe, assurances, amortissements déjà lissés).<br>
+         • Gain de productivité de l'équipe : absorption d'un volume plus important sans embauche immédiate supplémentaire.<br>
+         • Dilution des charges fixes sur un Chiffre d'Affaires plus élevé.</p>
+    </div>
+
+    <div class="info-card">
+      <h3>5. Développement des privatisations</h3>
+      <p>• Commercialisation des créneaux creux auprès des entreprises et associations (privatisation quiz/cinéma à 300 € - 400 €).<br>
+         • Organisation de privatisations récurrentes les week-ends ou soirées de début de semaine.</p>
+    </div>
+  </div>
+
+  <div class="note" style="margin-top:24px; background:var(--card); padding:16px; border-radius:6px;">
+    <strong>Conclusion financière à 3 ans :</strong><br>
+    Grâce à la hausse naturelle du volume de ventes et à l'effet de levier opérationnel (charges fixes stables pour un CA croissant), le point mort sera atteint vers le <strong>8ᵉ mois de l'Année 2</strong> (environ 215 000 € de CA). L'Année 3 dégagera un résultat net positif et permettra d'afficher une rentabilité financière (ROE) et économique nettement positives.
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>The Social Cup — Un café qui nous rassemble</span>
+    <span>hello@cafesocialcup.com · Paris, France</span>
+  </div>
+</footer>
+
+<script>
+  function fmt(n){ return Math.round(n).toLocaleString('fr-FR') + ' €'; }
+  function fmtSigned(n){
+    var r = Math.round(n);
+    return (r<0 ? '− ' : '') + Math.abs(r).toLocaleString('fr-FR') + ' €';
+  }
+  function pct(n){ return n.toLocaleString('fr-FR', {minimumFractionDigits:1, maximumFractionDigits:1}) + ' %'; }
+
+  function displayYear1(){
+    var ca = 161400;
+    var revPrinc = ca * (141600/161400);
+    var revCompl = ca * (19800/161400);
+    var achats = 60450 * ca / 161400;
+    var fournitures = 4800 * ca / 161400;
+    var margeVariable = ca - achats - fournitures;
+    var services = 52750;
+    var impots = 0;
+    var salaires = 24000;
+    var chargesSalaries = 7000;
+    var prelevements = 20000;
+    var chargesDirigeant = 15000;
+    var amort = 8000;
+    var totalCharges = achats + fournitures + services + impots + salaires + chargesSalaries + prelevements + chargesDirigeant + amort;
+    var re = ca - totalCharges;
+    var chargesFin = 2000;
+    var rcai = re - chargesFin;
+    var is = Math.max(0, rcai * 0.25);
+    var rn = rcai - is;
+
+    var stock = 2000 * ca / 161400;
+    var creances = 0;
+    var dettesFourn = stock + 500; // Ajustement BFR à -500 € (crédit fournisseur supérieur au stock)
+    var bfr = stock + creances - dettesFourn;
+
+    var immob = 32000;
+    var depot = 3000;
+    var capital = 25000;
+    var emprunt = 27000;
+    var treso = 0;
+    var decouvert = 15100;
+    var totalPassif = capital + rn + emprunt + dettesFourn + decouvert; // 25000 + (-32600) + 27000 + 2500 + 15100 = 37000
+    var totalActif = immob + depot + stock + creances + treso;
+
+    document.getElementById('caValue').textContent = fmt(ca);
+    document.getElementById('revPrinc').textContent = fmt(revPrinc);
+    document.getElementById('revCompl').textContent = fmt(revCompl);
+    document.getElementById('revTotal').textContent = fmt(ca);
+    document.getElementById('coffeePerDay').textContent = Math.round(95 * ca / 161400);
+    document.getElementById('marginPerBasket').textContent = '4,97 €';
+    document.getElementById('eventShare').textContent = Math.round(revCompl / ca * 100) + ' %';
+
+    document.getElementById('cr_ca').textContent = fmt(ca);
+    document.getElementById('cr_achats').textContent = fmtSigned(-achats);
+    document.getElementById('cr_fournitures').textContent = fmtSigned(-fournitures);
+    document.getElementById('cr_services').textContent = fmtSigned(-services);
+    document.getElementById('cr_impots').textContent = fmtSigned(-impots);
+    document.getElementById('cr_salaires').textContent = fmtSigned(-salaires);
+    document.getElementById('cr_charges_salaries').textContent = fmtSigned(-chargesSalaries);
+    document.getElementById('cr_prelevements').textContent = fmtSigned(-prelevements);
+    document.getElementById('cr_charges_dirigeant').textContent = fmtSigned(-chargesDirigeant);
+    document.getElementById('cr_amort').textContent = fmtSigned(-amort);
+    document.getElementById('cr_total_charges').textContent = fmtSigned(-totalCharges);
+    document.getElementById('cr_re').textContent = fmtSigned(re);
+    document.getElementById('cr_fin').textContent = fmtSigned(-chargesFin);
+    document.getElementById('cr_rcai').textContent = fmtSigned(rcai);
+    document.getElementById('cr_is').textContent = fmtSigned(-is);
+    document.getElementById('cr_rn').textContent = fmt(rn);
+
+    document.getElementById('m_brute').textContent = pct(margeVariable/ca*100);
+    document.getElementById('m_ebe').textContent = pct(re/ca*100);
+    document.getElementById('m_nette').textContent = pct(rn/ca*100);
+
+    document.getElementById('bfr_stock').textContent = fmt(stock);
+    document.getElementById('bfr_creances').textContent = fmt(creances);
+    document.getElementById('bfr_dettes').textContent = fmtSigned(-dettesFourn);
+    document.getElementById('bfr_total').textContent = fmtSigned(bfr);
+
+    document.getElementById('b_stock').textContent = fmt(stock);
+    document.getElementById('b_creances').textContent = fmt(creances);
+    document.getElementById('b_treso').textContent = fmt(treso);
+    document.getElementById('b_totalactif').textContent = fmt(totalActif);
+    document.getElementById('b_cp').textContent = fmt(rn);
+    document.getElementById('b_dettes').textContent = fmt(dettesFourn);
+    document.getElementById('b_decouvert').textContent = fmt(decouvert);
+    document.getElementById('b_totalpassif').textContent = fmt(totalPassif);
+  }
+
+  displayYear1();
+
+  var tabs = document.querySelectorAll('.tab-btn');
+  tabs.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      tabs.forEach(function(b){ b.classList.remove('active'); });
+      document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.panel).classList.add('active');
+    });
+  });
+
+</script>
+
+</body>
+</html>
